@@ -145,6 +145,9 @@ importers:
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
+      cf-mongodb-polyfills:
+        specifier: ^1.0.1
+        version: 1.0.1
       hono:
         specifier: ^4.6.20
         version: 4.7.0
@@ -1451,6 +1454,9 @@ packages:
 
   caniuse-lite@1.0.30001699:
     resolution: {integrity: sha512-b+uH5BakXZ9Do9iK+CkDmctUSEqZl+SP056vc5usa0PL+ev5OHw003rZXcnjNDv3L8P5j6rwT6C0BPKSikW08w==}
+
+  cf-mongodb-polyfills@1.0.1:
+    resolution: {integrity: sha512-9K/bpTWI32zrHGwV1IXRlKN85Q1V1e8DQn+blzbjKBCTUtBpyejll1nt+ZH7zQRuLuBjVnKcqQwhXzuk92BihA==}
 
   chalk-scripts@1.2.10:
     resolution: {integrity: sha512-zR775ajFSwpgLsVTJrDHYHtA0Is8Y1UJdQ7m6DZeWqzT786UuuT75/PSIdiTmZhbzhZC9Iw/DAifAYmfhN9CWA==}
@@ -4597,6 +4603,8 @@ snapshots:
   camelcase-css@2.0.1: {}
 
   caniuse-lite@1.0.30001699: {}
+
+  cf-mongodb-polyfills@1.0.1: {}
 
   chalk-scripts@1.2.10:
     dependencies:

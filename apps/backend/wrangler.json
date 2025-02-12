@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat_v2"],
   "name": "backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-02-12",
@@ -15,5 +15,10 @@
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
+  },
+  "alias": {
+    "net": "cf-mongodb-polyfills/net",
+    "dns": "cf-mongodb-polyfills/dns",
+    "tls": "cf-mongodb-polyfills/tls"
   }
 }

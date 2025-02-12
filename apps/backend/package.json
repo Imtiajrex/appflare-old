@@ -6,11 +6,12 @@
     "migrate": "wrangler d1 migrations apply appflare"
   },
   "dependencies": {
-    "@trpc/server": "^10.45.2",
-    "hono": "^4.6.20",
-    "trpc-swagger": "^1.2.8",
     "@appflare/schemas": "workspace:*",
-    "@appflare/services": "workspace:*"
+    "@appflare/services": "workspace:*",
+    "@trpc/server": "^10.45.2",
+    "cf-mongodb-polyfills": "^1.0.1",
+    "hono": "^4.6.20",
+    "trpc-swagger": "^1.2.8"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250204.0",
