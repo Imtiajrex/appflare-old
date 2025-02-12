@@ -22,11 +22,15 @@ type CreateAccountResult = {
 }
 
 export class AuthService {
-  async createAccountWithEmailAndPassword(
-    name: string,
-    email: string,
-    password: string,
-  ): Promise<CreateAccountResult> {
+  async createAccountWithEmailAndPassword({
+    name,
+    email,
+    password,
+  }: {
+    name: string
+    email: string
+    password: string
+  }): Promise<CreateAccountResult> {
     const db = initializeDB()
     const user: UserTypes['insert'] = {
       name,
@@ -47,10 +51,13 @@ export class AuthService {
       token,
     }
   }
-  async signInWithEmailAndPassword(
-    email: string,
-    password: string,
-  ): Promise<SignInResult> {
+  async signInWithEmailAndPassword({
+    email,
+    password,
+  }: {
+    email: string
+    password: string
+  }): Promise<SignInResult> {
     const db = initializeDB()
     const result = await db
       .select()

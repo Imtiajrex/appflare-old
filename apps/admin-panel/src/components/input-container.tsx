@@ -17,11 +17,11 @@ export type InputContainerProps = {
 }
 export default function InputContainer(props: InputContainerProps) {
   return (
-    <div className="flex flex-col gap-1">
+    <label className={cn('flex flex-col gap-1', props.containerClassName)}>
       {props.label && (
-        <label className={cn('text-sm font-medium', props.labelClassName)}>
+        <p className={cn('text-sm font-medium', props.labelClassName)}>
           {props.label}
-        </label>
+        </p>
       )}
       {props.description && (
         <p className={cn('text-sm text-gray-500', props.descriptionClassName)}>
@@ -44,6 +44,6 @@ export default function InputContainer(props: InputContainerProps) {
           {props.error}
         </p>
       )}
-    </div>
+    </label>
   )
 }

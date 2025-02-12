@@ -15,11 +15,8 @@
   "scripts": {
     "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
   },
-  "nohoist": [
-    
-  ],
+  "nohoist": [],
   "dependencies": {
-    "@appflare/auth": "workspace:*",
     "@appflare/config": "workspace:*",
     "@appflare/db": "workspace:*",
     "neverthrow": "^8.1.1",

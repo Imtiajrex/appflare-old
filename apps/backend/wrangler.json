@@ -1,5 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+  "compatibility_flags": ["nodejs_compat"],
   "name": "backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-02-12",
@@ -7,7 +8,8 @@
     {
       "binding": "DB",
       "database_name": "appflare",
-      "database_id": "4cd215f6-7c22-45a9-92b1-3c0bebbde8a5"
+      "database_id": "4cd215f6-7c22-45a9-92b1-3c0bebbde8a5",
+      "migrations_dir": "../../packages/db/drizzle/migrations"
     }
   ],
   "observability": {

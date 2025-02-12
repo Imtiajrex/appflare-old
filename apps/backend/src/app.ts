@@ -1,9 +1,7 @@
-import { Hono } from 'hono'
+import { t } from 'lib/trpc'
+import { adminRouter } from 'routes/admin/admin.route'
 
-const app = new Hono()
-
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
+const appRouter = t.router({
+  admin: adminRouter,
 })
-
-export default app
+export default appRouter

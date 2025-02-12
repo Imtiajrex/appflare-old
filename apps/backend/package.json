@@ -2,13 +2,18 @@
   "name": "@appflare/backend",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "deploy": "wrangler deploy --minify",
+    "migrate": "wrangler d1 migrations apply appflare"
   },
   "dependencies": {
-    "hono": "^4.6.20"
+    "@trpc/server": "^10.45.2",
+    "hono": "^4.6.20",
+    "trpc-swagger": "^1.2.8",
+    "@appflare/schemas": "workspace:*",
+    "@appflare/services": "workspace:*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250204.0",
-    "wrangler": "^3.101.0"
+    "wrangler": "^3.108.1"
   }
 }

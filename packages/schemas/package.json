@@ -1,10 +1,8 @@
 {
-  "name": "@appflare/auth",
+  "name": "@appflare/schemas",
   "version": "0.0.0",
   "main": "index.ts",
   "dependencies": {
-    "@oslojs/crypto": "^1.0.1",
-    "@oslojs/encoding": "^1.1.0",
     "@appflare/db": "workspace:*"
   }
 }

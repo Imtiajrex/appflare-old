@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.30.4"
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate"
   }
 }

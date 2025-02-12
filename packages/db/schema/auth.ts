@@ -3,22 +3,22 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 import { createSchema } from '../utils'
 
-export const userTable = sqliteTable('user', {
+export const userTable = sqliteTable('_superUsers', {
   id: integer('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull(),
   password: text('password').notNull(),
-  createdAt: integer('created_at', {
+  createdAt: integer('createdAt', {
     mode: 'timestamp',
   }).notNull(),
-  updatedAt: integer('updated_at', {
+  updatedAt: integer('updatedAt', {
     mode: 'timestamp',
   }).notNull(),
 })
 
-export const sessionTable = sqliteTable('session', {
+export const sessionTable = sqliteTable('_superUserSessions', {
   id: text('id').primaryKey(),
-  userId: integer('user_id')
+  userId: integer('userId')
     .notNull()
     .references(() => userTable.id),
   expiresAt: integer('expires_at', {

@@ -1,9 +1,3 @@
-class Configs {
-  config: Env
-  constructor(_config: Env) {
-    this.config = _config
-  }
-}
 class Config {
   static instance: Config | null = null
 
