@@ -1,0 +1,34 @@
+{
+  "name": "appflare",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "eslint": "^8.21.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "turbo": "^1.4.2",
+    "typescript": "~5.3.3"
+  },
+  "scripts": {
+    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
+  },
+  "nohoist": [
+    
+  ],
+  "dependencies": {
+    "@appflare/auth": "workspace:*",
+    "@appflare/config": "workspace:*",
+    "@appflare/db": "workspace:*",
+    "neverthrow": "^8.1.1",
+    "ts-option": "^2.1.0",
+    "zod": "^3.24.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

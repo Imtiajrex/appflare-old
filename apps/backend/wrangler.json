@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "backend",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-02-12",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "appflare",
+      "database_id": "4cd215f6-7c22-45a9-92b1-3c0bebbde8a5"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
