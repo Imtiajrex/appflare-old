@@ -1,5 +1,5 @@
+import { adminSchema } from '@appflare/db/schemas'
 import { z } from 'zod'
-import { userSchema } from '@appflare/db'
 
 export const signupInputSchema = z.object({
   email: z.string().email(),
@@ -8,7 +8,6 @@ export const signupInputSchema = z.object({
 })
 export const signupOutputSchema = z.object({
   token: z.string(),
-  user: userSchema.select,
 })
 
 export const signInInputSchema = z.object({
@@ -17,5 +16,5 @@ export const signInInputSchema = z.object({
 })
 export const signInOutputSchema = z.object({
   token: z.string(),
-  user: userSchema.select,
+  user: adminSchema.select,
 })

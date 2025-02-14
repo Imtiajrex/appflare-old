@@ -6,7 +6,10 @@ import { createOpenApiFetchHandler } from 'trpc-swagger'
 import appRouter from './app'
 import { createContext } from 'lib/trpc'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+import DBClient from '@appflare/db'
+import { Result } from 'neverthrow'
 declare global {
+  type ResultType<T> = Result<T, string>
   interface Env {
     DB: D1Database
     MONGO_URI: string
@@ -34,6 +37,7 @@ const corsHeaders = {
 export default {
   fetch: async (request: Request, env: Env) => {
     Config.initialize(env)
+    await DBClient.connect()
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,

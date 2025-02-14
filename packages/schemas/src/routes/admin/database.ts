@@ -3,8 +3,8 @@ import { z } from 'zod'
 export const listDocuments = {
   input: z.object({
     collectionName: z.string(),
-    limit: z.number().optional(),
-    offset: z.number().optional(),
+    limit: z.coerce.number().optional(),
+    offset: z.coerce.number().optional(),
   }),
   output: z.object({
     data: z.array(z.any()),

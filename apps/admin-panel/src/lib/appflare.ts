@@ -5,4 +5,4 @@ export const client = new Client({
 })
 
 export const auth = new Auth(client)
-export const db = new Database(client)
+export const db = new Database(client, 'database')

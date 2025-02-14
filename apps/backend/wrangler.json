@@ -19,6 +19,7 @@
   "alias": {
     "net": "cf-mongodb-polyfills/net",
     "dns": "cf-mongodb-polyfills/dns",
-    "tls": "cf-mongodb-polyfills/tls"
+    "tls": "cf-mongodb-polyfills/tls",
+    "mongoose": "mongoose/lib/index.js"
   }
 }

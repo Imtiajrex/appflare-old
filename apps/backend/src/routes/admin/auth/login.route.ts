@@ -1,6 +1,7 @@
 import { AuthService } from '@appflare/services'
 import { signInInputSchema, signInOutputSchema } from '@appflare/schemas'
 import { t } from 'lib/trpc'
+import { TRPCError } from '@trpc/server'
 
 export const signInRoute = t.procedure
   .meta({
@@ -21,9 +22,12 @@ export const signInRoute = t.procedure
       email,
       password,
     })
-    const { user, token } = result!
-    return {
-      user,
-      token,
+    if (result.isErr()) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Invalid email or password',
+      })
     }
+
+    return result.value
   })

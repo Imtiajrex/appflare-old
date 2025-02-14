@@ -1,5 +1,5 @@
 import { createDocument, listDocuments } from '@appflare/schemas'
-import NoSQLService from '@appflare/services/nosql.service'
+import DBService from '@appflare/services/db/db.service'
 import { t } from 'lib/trpc'
 export const databaseRouter = t.router({
   listDocuments: t.procedure
@@ -16,15 +16,14 @@ export const databaseRouter = t.router({
     .query(async ({ input }) => {
       const { collectionName, limit, offset } = input
 
-      const dbService = new NoSQLService('database')
-      const result = await dbService.listDocuments({
-        collectionName,
+      const dbService = new DBService('database', collectionName)
+      const result = await dbService.listMany({
         limit,
         offset,
       })
       return {
         data: result.data,
-        totalDocuments: result.count,
+        totalDocuments: result.totalDocuments,
       }
     }),
   createDocument: t.procedure
@@ -40,8 +39,8 @@ export const databaseRouter = t.router({
     .output(createDocument.output)
     .query(async ({ input }) => {
       const { collectionName, document } = input
-      const dbService = new NoSQLService('database')
-      const result = await dbService.createDocument(collectionName, document)
+      const dbService = new DBService('database', collectionName)
+      const result = await dbService.insertOne(document)
 
       return {
         success: !!result,

@@ -40,8 +40,8 @@ export default function Signup() {
       router.push('/dashboard')
     },
     onError: (error) => {
-      console.log(error)
-      toast.error('Signup failed')
+      console.log(error?.cause)
+      toast.error(error?.cause?.message)
     },
   })
   const router = useRouter()

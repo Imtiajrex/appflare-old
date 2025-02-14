@@ -3,14 +3,7 @@
   "version": "0.0.0",
   "main": "index.ts",
   "dependencies": {
-    "better-sqlite3": "^11.8.1",
-    "drizzle-orm": "^0.39.3",
-    "drizzle-zod": "^0.7.0"
-  },
-  "devDependencies": {
-    "drizzle-kit": "^0.30.4"
-  },
-  "scripts": {
-    "generate": "drizzle-kit generate"
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.0"
   }
 }

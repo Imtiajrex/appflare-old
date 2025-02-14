@@ -1,26 +1,24 @@
-import {
-  initializeDB,
-  Session,
-  sessionTable,
-  User,
-  userTable,
-  UserTypes,
-} from '@appflare/db'
+import { AdminSessionType, AdminType } from '@appflare/db/schemas'
 import { sha256 } from '@oslojs/crypto/sha2'
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from '@oslojs/encoding'
-import { and, eq } from 'drizzle-orm'
+import DBService from '../db/db.service'
+import { err, Result, ResultAsync, ok } from 'neverthrow'
 type SignInResult = {
   token: string
-  user: User
-} | null
+  user: AdminType['select']
+}
 type CreateAccountResult = {
   token: string
-  user: User
 }
 
+const adminCollection = new DBService<AdminType>('settings', 'admins')
+const sessionCollection = new DBService<AdminSessionType>(
+  'settings',
+  'adminSessions',
+)
 export class AuthService {
   async createAccountWithEmailAndPassword({
     name,
@@ -30,26 +28,23 @@ export class AuthService {
     name: string
     email: string
     password: string
-  }): Promise<CreateAccountResult> {
-    const db = initializeDB()
-    const user: UserTypes['insert'] = {
+  }): Promise<ResultType<CreateAccountResult>> {
+    const user: AdminType['insert'] = {
       name,
       email,
       password,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     }
-    const insertedUser = await db
-      .insert(userTable)
-      .values(user)
-      .returning()
-      .execute()
+    const existingUser = await adminCollection.findOne({ email })
+    if (existingUser) {
+      return err('User already exists')
+    }
+    const insertedUser = await adminCollection.insertOne(user)
+
     const token = this.generateSessionToken()
-    await this.createSession(token, insertedUser[0]!.id)
-    return {
-      user: insertedUser[0]!,
+    await this.createSession(token, insertedUser?.insertedId?.toString())
+    return ok({
       token,
-    }
+    })
   }
   async signInWithEmailAndPassword({
     email,
@@ -57,23 +52,19 @@ export class AuthService {
   }: {
     email: string
     password: string
-  }): Promise<SignInResult> {
-    const db = initializeDB()
-    const result = await db
-      .select()
-      .from(userTable)
-      .where(and(eq(userTable.email, email), eq(userTable.password, password)))
-    if (result.length < 1) {
-      return null
+  }): Promise<ResultType<SignInResult>> {
+    const admin = await adminCollection.findOne({ email, password })
+
+    if (!admin) {
+      return err('Invalid email or password')
     }
-    const user = result[0]!
 
     const token = this.generateSessionToken()
-    await this.createSession(token, user.id)
-    return {
+    await this.createSession(token, admin.id)
+    return ok({
       token,
-      user,
-    }
+      user: admin,
+    })
   }
   generateSessionToken(): string {
     const bytes = new Uint8Array(20)
@@ -81,59 +72,59 @@ export class AuthService {
     const token = encodeBase32LowerCaseNoPadding(bytes)
     return token
   }
-  async createSession(token: string, userId: number): Promise<Session> {
+  async createSession(
+    token: string,
+    userId: string,
+  ): Promise<ResultType<AdminSessionType['select']>> {
     const sessionId = encodeHexLowerCase(
       sha256(new TextEncoder().encode(token)),
     )
-    const session: Session = {
+    const session = {
       id: sessionId,
       userId,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    }
-    const db = initializeDB()
-    await db.insert(sessionTable).values(session)
-    return session
+    } as const
+    const sessionCreationResult = await ResultAsync.fromPromise(
+      sessionCollection.insertOne(session),
+      () => 'Failed to insert session',
+    )
+    if (sessionCreationResult.isErr()) return err(sessionCreationResult.error)
+    return ok(session)
   }
-  async validateSessionToken(token: string): Promise<SessionValidationResult> {
+  async validateSessionToken(
+    token: string,
+  ): Promise<ResultType<SessionValidationResult>> {
     const sessionId = encodeHexLowerCase(
       sha256(new TextEncoder().encode(token)),
     )
-    const db = initializeDB()
-
-    const result = await db
-      .select({ user: userTable, session: sessionTable })
-      .from(sessionTable)
-      .innerJoin(userTable, eq(sessionTable.userId, userTable.id))
-      .where(eq(sessionTable.id, sessionId))
-    if (result.length < 1) {
-      return { session: null, user: null }
+    const session = await sessionCollection.findOne({ id: sessionId })!
+    if (!session) {
+      return err('Session not found')
     }
-    const { user, session } = result[0]!
+    const user = await adminCollection.findOne({ id: session.userId })!
+    if (!user) {
+      return err('User not found')
+    }
     if (Date.now() >= session.expiresAt.getTime()) {
-      await db.delete(sessionTable).where(eq(sessionTable.id, session.id))
-      return { session: null, user: null }
+      await sessionCollection.deleteOne({ id: sessionId })
+      return err('Session expired')
     }
     if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
       session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
-      await db
-        .update(sessionTable)
-        .set({
-          expiresAt: session.expiresAt,
-        })
-        .where(eq(sessionTable.id, session.id))
+      await sessionCollection.updateOne({ id: sessionId }, session)
     }
-    return { session, user }
+    return ok({ session, user })
   }
   async invalidateSession(sessionId: string): Promise<void> {
-    const db = initializeDB()
-    await db.delete(sessionTable).where(eq(sessionTable.id, sessionId))
+    await sessionCollection.deleteOne({ id: sessionId })
   }
-  async invalidateAllSessions(userId: number): Promise<void> {
-    const db = initializeDB()
-    await db.delete(sessionTable).where(eq(sessionTable.userId, userId))
+  async invalidateAllSessions(userId: string): Promise<void> {
+    await sessionCollection.deleteMany({
+      userId,
+    })
   }
 }
 
 export type SessionValidationResult =
-  | { session: Session; user: User }
+  | { session: AdminSessionType['select']; user: AdminType['select'] }
   | { session: null; user: null }

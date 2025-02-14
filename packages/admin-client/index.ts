@@ -7,6 +7,7 @@ import {
   signupInputSchema,
   signupOutputSchema,
 } from '../schemas'
+import { z } from 'zod'
 
 const fetchSchema = createSchema({
   '/admin/auth/signin': {
@@ -20,11 +21,15 @@ const fetchSchema = createSchema({
   'admin/database/listDocuments': listDocuments,
   'admin/database/createDocument': createDocument,
 })
+const errorSchema = z.object({
+  message: z.string(),
+})
 export class Client {
   url: string
   apiKey: string
   $fetch: BetterFetch<{
     schema: typeof fetchSchema
+    errorSchema: typeof errorSchema
   }>
 
   constructor({ apiKey, url }: { url: string; apiKey: string }) {
@@ -32,12 +37,13 @@ export class Client {
     this.apiKey = apiKey
     this.$fetch = createFetch({
       baseURL: url,
-      retry: {
-        type: 'linear',
-        attempts: 3,
-        delay: 1000,
-      },
       schema: fetchSchema,
+      errorSchema: z.object({
+        message: z.string(),
+        cause: z.object({
+          message: z.string(),
+        }),
+      }),
     })
   }
 }
@@ -91,7 +97,6 @@ export class Database {
   }
   async listDocuments({
     collectionName,
-
     limit,
     offset,
   }: {
@@ -102,8 +107,8 @@ export class Database {
     return this.client.$fetch('/admin/database/listDocuments', {
       query: {
         collectionName,
-        limit,
-        offset,
+        ...(limit ? { limit } : {}),
+        ...(offset ? { offset } : {}),
       },
       throw: true,
     })
