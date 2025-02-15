@@ -79,7 +79,7 @@ export default function Signup() {
           })}
           disabled={!formState.isValid}
           type="submit"
-          loading={onSubmit.isPending}
+          loading={onSubmit.isLoading}
         >
           Signup
         </Button>

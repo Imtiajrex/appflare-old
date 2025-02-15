@@ -1,11 +1,10 @@
 import { Auth, Client, ClientProps, Database } from '@appflare/client'
-import { createFetch } from '@better-fetch/fetch'
+import { createFetch, RequestContext } from '@better-fetch/fetch'
 import {
   createDatabaseSchema,
   deleteDatabaseSchema,
   listDatabasesSchema,
 } from '@appflare/schemas/src/routes'
-import { z } from 'zod'
 import { DataBaseType } from '@appflare/schemas/src/db'
 
 export class AdminClient extends Client {
@@ -13,7 +12,7 @@ export class AdminClient extends Client {
     super(props)
     this.$fetch = createFetch({
       baseURL: props.url,
-      onRequest: (context) => {
+      onRequest: (context: RequestContext) => {
         context.headers.set('x-is-admin', 'true')
         return context
       },
