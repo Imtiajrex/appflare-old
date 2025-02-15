@@ -1,5 +1,5 @@
-import { adminSchema } from '@appflare/db/schemas'
 import { z } from 'zod'
+import { adminSchema } from '../../db'
 
 export const signupInputSchema = z.object({
   email: z.string().email(),

@@ -1,0 +1,9 @@
+{
+  "name": "@appflare/server",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@appflare/schemas": "workspace:*",
+    "@appflare/services": "workspace:*"
+  }
+}

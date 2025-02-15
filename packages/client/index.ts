@@ -1,7 +1,7 @@
 import { BetterFetch, createFetch, createSchema } from '@better-fetch/fetch'
 import {
-  createDocument,
-  listDocuments,
+  createDocumentSchema,
+  listDocumentsSchema,
   signInInputSchema,
   signInOutputSchema,
   signupInputSchema,
@@ -18,8 +18,8 @@ const fetchSchema = createSchema({
     input: signupInputSchema,
     output: signupOutputSchema,
   },
-  'admin/database/listDocuments': listDocuments,
-  'admin/database/createDocument': createDocument,
+  'admin/database/listDocuments': listDocumentsSchema,
+  'admin/database/createDocument': createDocumentSchema,
 })
 const errorSchema = z.object({
   message: z.string(),

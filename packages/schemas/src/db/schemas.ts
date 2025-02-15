@@ -13,16 +13,15 @@ const adminSessionBaseSchema = z.object({
   expiresAt: z.date(),
 })
 
+const selectBaseSchema = z.object({
+  _id: z.coerce.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
 const createSchema = <TSchema extends Record<string, z.ZodTypeAny>>(
   schema: z.ZodObject<TSchema>,
 ) => ({
-  select: schema.merge(
-    z.object({
-      id: z.string(),
-      createdAt: z.coerce.date(),
-      updatedAt: z.coerce.date(),
-    }),
-  ),
+  select: schema.merge(selectBaseSchema),
   insert: schema,
   update: schema.partial(),
 })
@@ -38,7 +37,7 @@ export const adminSchema = createSchema(adminBaseSchema)
 export const adminSessionSchema = createUnchangedSchema(adminSessionBaseSchema)
 
 export type CreateSchemaType<T extends z.ZodTypeAny> = {
-  select: z.infer<T> & { id: string; createdAt: Date; updatedAt: Date }
+  select: z.infer<T> & { _id: string; createdAt: Date; updatedAt: Date }
   insert: z.infer<T>
   update: Partial<z.infer<T>>
 }

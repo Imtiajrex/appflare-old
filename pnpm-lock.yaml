@@ -45,9 +45,9 @@ importers:
 
   apps/admin-panel:
     dependencies:
-      '@appflare/admin-client':
+      '@appflare/client':
         specifier: workspace:*
-        version: link:../../packages/admin-client
+        version: link:../../packages/client
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -142,6 +142,9 @@ importers:
       '@appflare/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas
+      '@appflare/server':
+        specifier: workspace:*
+        version: link:../../packages/server
       '@appflare/services':
         specifier: workspace:*
         version: link:../../packages/services
@@ -165,7 +168,7 @@ importers:
         specifier: ^3.109.1
         version: 3.109.1(@cloudflare/workers-types@4.20250204.0)
 
-  packages/admin-client:
+  packages/client:
     dependencies:
       '@appflare/schemas':
         specifier: workspace:*
@@ -185,20 +188,20 @@ importers:
         specifier: ^8.10.0
         version: 8.10.0
 
-  packages/nosql-db:
-    dependencies:
-      mongodb:
-        specifier: ^6.13.0
-        version: 6.13.0
-      mongoose:
-        specifier: ^8.10.0
-        version: 8.10.0
-
   packages/schemas:
     dependencies:
       '@appflare/db':
         specifier: workspace:*
         version: link:../db
+
+  packages/server:
+    dependencies:
+      '@appflare/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      '@appflare/services':
+        specifier: workspace:*
+        version: link:../services
 
   packages/services:
     dependencies:

@@ -1,4 +1,4 @@
-import { createDocument, listDocuments } from '@appflare/schemas'
+import { createDocumentSchema, listDocumentsSchema } from '@appflare/schemas'
 import DBService from '@appflare/services/db/db.service'
 import { t } from 'lib/trpc'
 export const databaseRouter = t.router({
@@ -11,8 +11,8 @@ export const databaseRouter = t.router({
         tags: ['Admin Database'],
       },
     })
-    .input(listDocuments.input)
-    .output(listDocuments.output)
+    .input(listDocumentsSchema.input)
+    .output(listDocumentsSchema.output)
     .query(async ({ input }) => {
       const { collectionName, limit, offset } = input
 
@@ -35,8 +35,8 @@ export const databaseRouter = t.router({
         tags: ['Admin Database'],
       },
     })
-    .input(createDocument.input)
-    .output(createDocument.output)
+    .input(createDocumentSchema.input)
+    .output(createDocumentSchema.output)
     .query(async ({ input }) => {
       const { collectionName, document } = input
       const dbService = new DBService('database', collectionName)

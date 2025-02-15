@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const listDocuments = {
+export const listDocumentsSchema = {
   input: z.object({
     collectionName: z.string(),
     limit: z.coerce.number().optional(),
@@ -12,7 +12,7 @@ export const listDocuments = {
   }),
 }
 
-export const createDocument = {
+export const createDocumentSchema = {
   input: z.object({
     collectionName: z.string(),
     document: z.any(),

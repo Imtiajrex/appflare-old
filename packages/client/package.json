@@ -1,5 +1,5 @@
 {
-  "name": "@appflare/admin-client",
+  "name": "@appflare/client",
   "version": "0.0.0",
   "main": "index.ts",
   "dependencies": {

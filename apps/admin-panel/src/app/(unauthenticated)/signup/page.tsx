@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import Input from '@/components/input'
 import { Button } from '@tremor/react'
@@ -39,7 +40,7 @@ export default function Signup() {
 
       router.push('/dashboard')
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.log(error?.cause)
       toast.error(error?.cause?.message)
     },

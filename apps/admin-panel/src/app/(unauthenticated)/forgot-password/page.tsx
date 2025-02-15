@@ -19,7 +19,7 @@ export default function ForgotPassword() {
       email: '',
     },
   })
-  const onSubmit = async (data: FormSchema) => {
+  const onSubmit = async () => {
     toast.success('Login successful')
   }
   const router = useRouter()

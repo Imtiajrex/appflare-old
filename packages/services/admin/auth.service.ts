@@ -1,4 +1,4 @@
-import { AdminSessionType, AdminType } from '@appflare/db/schemas'
+import { AdminSessionType, AdminType } from '@appflare/schemas/db'
 import { sha256 } from '@oslojs/crypto/sha2'
 import {
   encodeBase32LowerCaseNoPadding,

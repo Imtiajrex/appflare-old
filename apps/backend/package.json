@@ -1,5 +1,5 @@
 {
-  "name": "@appflare/backend",
+  "name": "@appflare/cloudflare",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
@@ -10,6 +10,7 @@
     "@appflare/services": "workspace:*",
     "@trpc/server": "^10.45.2",
     "cf-mongodb-polyfills": "^1.0.1",
+    "@appflare/server": "workspace:*",
     "hono": "^4.6.20",
     "trpc-swagger": "^1.2.8"
   },

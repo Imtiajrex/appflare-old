@@ -28,6 +28,7 @@ export const signInRoute = t.procedure
         message: 'Invalid email or password',
       })
     }
+    console.log(result.value)
 
     return result.value
   })

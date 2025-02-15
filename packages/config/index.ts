@@ -1,14 +1,20 @@
 class Config {
   static instance: Config | null = null
 
-  config: Env
-  constructor(env: Env) {
+  config: _APPFLARE_ENV
+  constructor(env: _APPFLARE_ENV) {
     if (Config.instance) {
       return Config.instance
     }
 
     this.config = env
     Config.instance = this
+  }
+  static isStorageEnabled() {
+    return !!Config.getInstance().config.BUCKET
+  }
+  static isKVEnabled() {
+    return !!Config.getInstance().config.KV
   }
 
   static initialize(env) {

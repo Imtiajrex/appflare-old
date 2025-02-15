@@ -6,10 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "next build && wrangler deploy"
   },
   "dependencies": {
-    "@appflare/admin-client": "workspace:*",
+    "@appflare/client": "workspace:*",
     "@headlessui/react": "^2.2.0",
     "@headlessui/tailwindcss": "^0.2.2",
     "@hookform/resolvers": "^4.0.0",

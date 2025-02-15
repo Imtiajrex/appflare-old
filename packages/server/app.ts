@@ -1,5 +1,5 @@
 import { t } from 'lib/trpc'
-import { adminRouter } from 'routes/admin/admin.route'
+import { adminRouter } from 'controllers/admin/admin.route'
 
 const appRouter = t.router({
   admin: adminRouter,
