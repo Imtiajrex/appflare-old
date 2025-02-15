@@ -42,8 +42,8 @@ const routes = [
     icon: 'akar-icons:home',
   },
   {
-    name: 'Users',
-    path: '/dashboard/users',
+    name: 'Auth',
+    path: '/dashboard/auth',
     icon: 'akar-icons:person',
   },
   {

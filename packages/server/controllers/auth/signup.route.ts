@@ -7,9 +7,9 @@ export const signupRoute = t.procedure
   .meta({
     openapi: {
       method: 'POST',
-      summary: 'Sign up for an admin account',
-      path: '/admin/auth/signup',
-      tags: ['Admin Authentication'],
+      summary: 'Sign up for an account',
+      path: '/auth/signup',
+      tags: ['Authentication'],
     },
   })
   .input(signupInputSchema)

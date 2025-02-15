@@ -6,6 +6,7 @@ import {
   OptionalUnlessRequiredId,
   UpdateResult,
 } from 'mongodb'
+import { err, ok, Result, ResultAsync } from 'neverthrow'
 
 export default class DBService<
   T extends {
@@ -16,7 +17,7 @@ export default class DBService<
 > {
   databaseName: string
   collectionName: string
-  getCollection(): Collection {
+  getCollection(): Collection<T['select']> {
     return DBClient.getClient()
       .db(this.databaseName)
       .collection(this.collectionName)
@@ -51,7 +52,11 @@ export default class DBService<
     doc: OptionalUnlessRequiredId<T['insert']>,
   ): Promise<InsertOneResult<T['select']>> {
     const collection = this.getCollection()
-    return collection.insertOne(doc)
+    return collection.insertOne({
+      ...doc,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
   }
 
   async updateOne(
@@ -59,14 +64,39 @@ export default class DBService<
     update: T['update'],
   ): Promise<UpdateResult<T>> {
     const collection = this.getCollection()
-    return collection.updateOne(query, { $set: update })
+    return collection.updateOne(query, {
+      $set: {
+        ...update,
+        updatedAt: new Date(),
+      },
+    })
   }
-  async deleteOne(query: Filter<T['select']>): Promise<void> {
+  async deleteOne(query: Filter<T['select']>): Promise<ResultType<boolean>> {
     const collection = this.getCollection()
-    await collection.deleteOne(query)
+    const deleteResult = await ResultAsync.fromPromise(
+      collection.deleteOne(query),
+      (error) => {
+        console.error(error)
+        return 'Failed to delete document'
+      },
+    )
+    if (deleteResult.isErr()) {
+      return err(deleteResult.error)
+    }
+    return ok(true)
   }
-  async deleteMany(query: Filter<T['select']>): Promise<void> {
+  async deleteMany(query: Filter<T['select']>): Promise<ResultType<boolean>> {
     const collection = this.getCollection()
-    await collection.deleteMany(query)
+    const deleteResult = await ResultAsync.fromPromise(
+      collection.deleteMany(query),
+      (error) => {
+        console.error(error)
+        return 'Failed to delete document'
+      },
+    )
+    if (deleteResult.isErr()) {
+      return err(deleteResult.error)
+    }
+    return ok(true)
   }
 }

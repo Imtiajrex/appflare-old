@@ -1,7 +1,9 @@
+import { authRouter } from 'controllers/auth/auth.route'
+import { databaseRouter } from 'controllers/database/database.route'
 import { t } from 'lib/trpc'
-import { adminRouter } from 'controllers/admin/admin.route'
 
 const appRouter = t.router({
-  admin: adminRouter,
+  auth: authRouter,
+  database: databaseRouter,
 })
 export default appRouter

@@ -45,9 +45,12 @@ importers:
 
   apps/admin-panel:
     dependencies:
-      '@appflare/client':
+      '@appflare/admin-client':
         specifier: workspace:*
-        version: link:../../packages/client
+        version: link:../../packages/admin-client
+      '@appflare/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -64,8 +67,8 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0(react@19.0.0)
       '@tanstack/react-query':
-        specifier: ^5.66.0
-        version: 5.66.0(react@19.0.0)
+        specifier: ^4.36.1
+        version: 4.36.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tremor/react':
         specifier: ^3.18.7
         version: 3.18.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -139,27 +142,12 @@ importers:
 
   apps/backend:
     dependencies:
-      '@appflare/schemas':
-        specifier: workspace:*
-        version: link:../../packages/schemas
       '@appflare/server':
         specifier: workspace:*
         version: link:../../packages/server
-      '@appflare/services':
-        specifier: workspace:*
-        version: link:../../packages/services
-      '@trpc/server':
-        specifier: ^10.45.2
-        version: 10.45.2
       cf-mongodb-polyfills:
         specifier: ^1.0.1
         version: 1.0.1
-      hono:
-        specifier: ^4.6.20
-        version: 4.7.0
-      trpc-swagger:
-        specifier: ^1.2.8
-        version: 1.2.8(@trpc/client@10.45.2(@trpc/server@10.45.2))(@trpc/server@10.45.2)(@types/node@20.17.17)(zod@3.24.2)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20250204.0
@@ -167,6 +155,18 @@ importers:
       wrangler:
         specifier: ^3.109.1
         version: 3.109.1(@cloudflare/workers-types@4.20250204.0)
+
+  packages/admin-client:
+    dependencies:
+      '@appflare/client':
+        specifier: workspace:*
+        version: link:../client
+      '@appflare/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      '@better-fetch/fetch':
+        specifier: ^1.1.13
+        version: 1.1.13
 
   packages/client:
     dependencies:
@@ -202,6 +202,15 @@ importers:
       '@appflare/services':
         specifier: workspace:*
         version: link:../services
+      '@trpc/server':
+        specifier: ^10.45.2
+        version: 10.45.2
+      hono:
+        specifier: ^4.6.20
+        version: 4.7.0
+      trpc-swagger:
+        specifier: ^1.2.8
+        version: 1.2.8(@trpc/client@10.45.2(@trpc/server@10.45.2))(@trpc/server@10.45.2)(@types/node@20.17.17)(zod@3.24.2)
 
   packages/services:
     dependencies:
@@ -846,13 +855,20 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  '@tanstack/query-core@5.66.0':
-    resolution: {integrity: sha512-J+JeBtthiKxrpzUu7rfIPDzhscXF2p5zE/hVdrqkACBP8Yu0M96mwJ5m/8cPPYQE9aRNvXztXHlNwIh4FEeMZw==}
+  '@tanstack/query-core@4.36.1':
+    resolution: {integrity: sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==}
 
-  '@tanstack/react-query@5.66.0':
-    resolution: {integrity: sha512-z3sYixFQJe8hndFnXgWu7C79ctL+pI0KAelYyW+khaNJ1m22lWrhJU2QrsTcRKMuVPtoZvfBYrTStIdKo+x0Xw==}
+  '@tanstack/react-query@4.36.1':
+    resolution: {integrity: sha512-y7ySVHFyyQblPl3J3eQBWpXZkliroki3ARnBKsdJchlgt7yJLRDUcf4B8soufgiYt3pEQIkBWBx1N9/ZPIeUWw==}
     peerDependencies:
-      react: ^18 || ^19
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
 
   '@tanstack/react-virtual@3.13.0':
     resolution: {integrity: sha512-CchF0NlLIowiM2GxtsoKBkXA4uqSnY2KvnXo+kyUFD4a4ll6+J0qzoRsUPMwXV/H26lRsxgJIr/YmjYum2oEjg==}
@@ -3591,12 +3607,15 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tanstack/query-core@5.66.0': {}
+  '@tanstack/query-core@4.36.1': {}
 
-  '@tanstack/react-query@5.66.0(react@19.0.0)':
+  '@tanstack/react-query@4.36.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@tanstack/query-core': 5.66.0
+      '@tanstack/query-core': 4.36.1
       react: 19.0.0
+      use-sync-external-store: 1.4.0(react@19.0.0)
+    optionalDependencies:
+      react-dom: 19.0.0(react@19.0.0)
 
   '@tanstack/react-virtual@3.13.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -5966,7 +5985,6 @@ snapshots:
   use-sync-external-store@1.4.0(react@19.0.0):
     dependencies:
       react: 19.0.0
-    optional: true
 
   util-deprecate@1.0.2: {}
 

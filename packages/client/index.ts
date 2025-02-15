@@ -1,4 +1,5 @@
 import { BetterFetch, createFetch, createSchema } from '@better-fetch/fetch'
+import { z } from 'zod'
 import {
   createDocumentSchema,
   listDocumentsSchema,
@@ -7,23 +8,39 @@ import {
   signupInputSchema,
   signupOutputSchema,
 } from '../schemas'
-import { z } from 'zod'
 
-const fetchSchema = createSchema({
-  '/admin/auth/signin': {
+const paths = {
+  auth: {
+    signin: '/auth/signin',
+    signup: '/auth/signup',
+  },
+  database: {
+    listDocuments: '/database/listDocuments',
+    createDocument: '/database/createDocument',
+  },
+} as const
+export const fetchSchema = createSchema({
+  [paths.auth.signin]: {
     input: signInInputSchema,
     output: signInOutputSchema,
   },
-  '/admin/auth/signup': {
+  [paths.auth.signup]: {
     input: signupInputSchema,
     output: signupOutputSchema,
   },
-  'admin/database/listDocuments': listDocumentsSchema,
-  'admin/database/createDocument': createDocumentSchema,
+  [paths.database.listDocuments]: {
+    query: listDocumentsSchema.input,
+    output: listDocumentsSchema.output,
+  },
+  [paths.database.createDocument]: createDocumentSchema,
 })
 const errorSchema = z.object({
   message: z.string(),
 })
+export type ClientProps = {
+  apiKey: string
+  url: string
+}
 export class Client {
   url: string
   apiKey: string
@@ -32,18 +49,12 @@ export class Client {
     errorSchema: typeof errorSchema
   }>
 
-  constructor({ apiKey, url }: { url: string; apiKey: string }) {
+  constructor({ apiKey, url }: ClientProps) {
     this.url = url
     this.apiKey = apiKey
     this.$fetch = createFetch({
       baseURL: url,
       schema: fetchSchema,
-      errorSchema: z.object({
-        message: z.string(),
-        cause: z.object({
-          message: z.string(),
-        }),
-      }),
     })
   }
 }
@@ -61,7 +72,7 @@ export class Auth {
     password: string,
     extraConfig?: ExtraConfig,
   ) {
-    return this.client.$fetch('/admin/auth/signin', {
+    return this.client.$fetch(paths.auth.signin, {
       method: 'POST',
       body: {
         email,
@@ -70,13 +81,13 @@ export class Auth {
       throw: true,
     })
   }
-  async signUpWithEmailAndPassword<T extends ExtraConfig>(
+  async signUpWithEmailAndPassword(
     email: string,
     password: string,
     name: string,
     extraConfig?: ExtraConfig,
   ) {
-    return this.client.$fetch('/admin/auth/signup', {
+    return this.client.$fetch(paths.auth.signup, {
       method: 'POST',
       body: {
         email,
@@ -90,23 +101,24 @@ export class Auth {
 
 export class Database {
   client: Client
-  databaseName: string
-  constructor(client: Client, databaseName: string) {
+  databaseId: string
+  constructor(client: Client, databaseId: string) {
     this.client = client
-    this.databaseName = databaseName
+    this.databaseId = databaseId
   }
   async listDocuments({
-    collectionName,
+    collectionId,
     limit,
     offset,
   }: {
-    collectionName: string
+    collectionId: string
     limit?: number
     offset?: number
   }) {
-    return this.client.$fetch('/admin/database/listDocuments', {
+    return this.client.$fetch(paths.database.listDocuments, {
       query: {
-        collectionName,
+        databaseId: this.databaseId,
+        collectionId,
         ...(limit ? { limit } : {}),
         ...(offset ? { offset } : {}),
       },
@@ -114,16 +126,17 @@ export class Database {
     })
   }
   async createDocument({
-    collectionName,
+    collectionId,
     document,
   }: {
-    collectionName: string
+    collectionId: string
     document: any
   }) {
-    return this.client.$fetch('/admin/database/createDocument', {
+    return this.client.$fetch(paths.database.createDocument, {
       method: 'POST',
       body: {
-        collectionName,
+        databaseId: this.databaseId,
+        collectionId,
         document,
       },
       throw: true,

@@ -8,8 +8,8 @@ export const signInRoute = t.procedure
     openapi: {
       method: 'POST',
       summary: 'Sign in with an admin account',
-      path: '/admin/auth/signIn',
-      tags: ['Admin Authentication'],
+      path: '/auth/signIn',
+      tags: ['Authentication'],
     },
   })
   .input(signInInputSchema)
