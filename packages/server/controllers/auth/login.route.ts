@@ -1,7 +1,8 @@
-import { AuthService } from '@appflare/services'
 import { signInInputSchema, signInOutputSchema } from '@appflare/schemas'
+import { AuthService } from '@appflare/services'
+import { signInEmail } from 'better-auth/api'
+import { auth } from 'lib/auth'
 import { t } from 'lib/trpc'
-import { TRPCError } from '@trpc/server'
 
 export const signInRoute = t.procedure
   .meta({
@@ -16,19 +17,15 @@ export const signInRoute = t.procedure
   .output(signInOutputSchema)
   .mutation(async ({ input }) => {
     const { email, password } = input
-    // create user
-    const authService = new AuthService()
-    const result = await authService.signInWithEmailAndPassword({
-      email,
-      password,
+    const result = await auth().api.signInEmail({
+      body: {
+        email,
+        password,
+      },
     })
-    if (result.isErr()) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Invalid email or password',
-      })
-    }
-    console.log(result.value)
 
-    return result.value
+    return {
+      token: result.token,
+      user: result.user,
+    }
   })

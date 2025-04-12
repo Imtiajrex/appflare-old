@@ -16,5 +16,5 @@ export const signInInputSchema = z.object({
 })
 export const signInOutputSchema = z.object({
   token: z.string(),
-  user: adminSchema.select,
+  user: z.any(),
 })

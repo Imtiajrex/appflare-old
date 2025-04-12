@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
-    "hono": "^4.6.20",
     "@appflare/schemas": "workspace:*",
     "@appflare/services": "workspace:*",
     "@trpc/server": "^10.45.2",
+    "better-auth": "^1.2.5",
+    "hono": "^4.7.2",
     "trpc-swagger": "^1.2.8"
   }
 }

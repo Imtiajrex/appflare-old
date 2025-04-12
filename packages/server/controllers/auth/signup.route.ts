@@ -1,7 +1,6 @@
-import { AuthService } from '@appflare/services'
-import { t } from 'lib/trpc'
 import { signupInputSchema, signupOutputSchema } from '@appflare/schemas'
-import { TRPCError } from '@trpc/server'
+import { auth } from 'lib/auth'
+import { t } from 'lib/trpc'
 
 export const signupRoute = t.procedure
   .meta({
@@ -17,19 +16,14 @@ export const signupRoute = t.procedure
   .mutation(async ({ input }) => {
     const { email, password, name } = input
     // create user
-    const authService = new AuthService()
-    const accountCreationResult =
-      await authService.createAccountWithEmailAndPassword({
+    const accountCreationResult = await auth().api.signUpEmail({
+      body: {
         email,
         password,
         name,
-      })
-
-    if (accountCreationResult.isErr()) {
-      throw new TRPCError({
-        code: 'CONFLICT',
-        message: accountCreationResult.error,
-      })
+      },
+    })
+    return {
+      token: accountCreationResult.token!,
     }
-    return accountCreationResult.value
   })

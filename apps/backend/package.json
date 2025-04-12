@@ -6,8 +6,9 @@
     "migrate": "wrangler d1 migrations apply appflare"
   },
   "dependencies": {
+    "@appflare/server": "workspace:*",
     "cf-mongodb-polyfills": "^1.0.1",
-    "@appflare/server": "workspace:*"
+    "hono": "^4.7.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250204.0",
