@@ -1,16 +1,10 @@
-import Config from '@appflare/config'
-import { MongoClient, ServerApiVersion } from 'mongodb'
+import Config from 'lib/config'
+import { MongoClient } from 'mongodb'
 export default class DBClient {
   static client: MongoClient
   static async connect() {
     const { config } = Config.getInstance()
-    const client = new MongoClient(config.MONGO_URI, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
-    })
+    const client = new MongoClient(config!.MONGO_URI)
     await client.connect()
 
     DBClient.client = client

@@ -1,4 +1,4 @@
-import { AdminAuth, AdminClient, AdminDatabase } from '@appflare/admin-client'
+import { AdminAuth, AdminClient, AdminDatabase } from '@appflare/client'
 export const client = new AdminClient({
   url: 'http://localhost:8787/api',
   apiKey: '',

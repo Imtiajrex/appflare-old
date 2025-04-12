@@ -1,4 +1,4 @@
-import DBClient from '@appflare/db'
+import DBClient from 'lib/db'
 import {
   Collection,
   Filter,

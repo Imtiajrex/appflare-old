@@ -1,9 +1,0 @@
-{
-  "name": "@appflare/db",
-  "version": "0.0.0",
-  "main": "index.ts",
-  "dependencies": {
-    "mongodb": "^6.13.0",
-    "mongoose": "^8.10.0"
-  }
-}

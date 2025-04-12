@@ -1,14 +1,20 @@
-import Config from '@appflare/config'
 import { betterAuth } from 'better-auth'
 import { mongodbAdapter } from 'better-auth/adapters/mongodb'
-import { admin, organization } from 'better-auth/plugins'
-import { MongoClient } from 'mongodb'
+import {
+  admin,
+  apiKey,
+  bearer,
+  jwt,
+  openAPI,
+  organization,
+} from 'better-auth/plugins'
+import DBClient from './db'
 
 export const auth = () => {
-  const config = Config.getInstance()
-  const client = new MongoClient(config.config.MONGO_URI)
-  const db = client.db('__appflare')
+  const client = DBClient.getClient()
+  const db = client.db('__appflare__')
   return betterAuth({
+    basePath: '/api/v1/auth',
     database: mongodbAdapter(db),
     emailAndPassword: {
       enabled: true,
@@ -23,13 +29,35 @@ export const auth = () => {
             field: 'id',
           },
         },
+        roles: {
+          type: 'string',
+          required: false,
+        },
+        tenantId: {
+          type: 'string',
+          required: false,
+        },
       },
     },
     plugins: [
-      admin({
-        adminRoles: ['__superadmin'],
-      }),
+      jwt(),
+      bearer(),
+      apiKey(),
       organization(),
+      admin({
+        adminRoles: ['__superadmin__'],
+      }),
+      openAPI(),
     ],
   })
+}
+
+type AuthType = ReturnType<typeof auth>['$Infer']
+type UserType = AuthType['Session']['user'] | null
+type SessionType = AuthType['Session']['session'] | null
+export type HonoVariables = {
+  Variables: {
+    user: UserType
+    session: SessionType
+  }
 }

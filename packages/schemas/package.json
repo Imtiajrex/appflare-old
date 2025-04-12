@@ -2,7 +2,5 @@
   "name": "@appflare/schemas",
   "version": "0.0.0",
   "main": "index.ts",
-  "dependencies": {
-    "@appflare/db": "workspace:*"
-  }
+  "dependencies": {}
 }

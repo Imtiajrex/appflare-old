@@ -3,15 +3,9 @@
   "compatibility_flags": ["nodejs_compat_v2"],
   "name": "appflare-backend",
   "main": "src/index.ts",
-  "compatibility_date": "2025-02-12",
+  "compatibility_date": "2025-02-04",
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
-  },
-  "alias": {
-    "net": "cf-mongodb-polyfills/net",
-    "dns": "cf-mongodb-polyfills/dns",
-    "tls": "cf-mongodb-polyfills/tls",
-    "mongoose": "mongoose/lib/index.js"
   }
 }

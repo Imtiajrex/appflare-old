@@ -10,7 +10,7 @@
     "deploy": "next build && wrangler deploy"
   },
   "dependencies": {
-    "@appflare/admin-client": "workspace:*",
+    "@appflare/client": "workspace:*",
     "@appflare/schemas": "workspace:*",
     "@headlessui/react": "^2.2.0",
     "@headlessui/tailwindcss": "^0.2.2",

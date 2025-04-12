@@ -1,7 +1,7 @@
 class Config {
   static instance: Config | null = null
 
-  config: _APPFLARE_ENV
+  config: _APPFLARE_ENV | null = null
   constructor(env: _APPFLARE_ENV) {
     if (Config.instance) {
       return Config.instance
@@ -11,13 +11,13 @@ class Config {
     Config.instance = this
   }
   static isStorageEnabled() {
-    return !!Config.getInstance().config.BUCKET
+    return !!Config.getInstance().config!.BUCKET
   }
   static isKVEnabled() {
-    return !!Config.getInstance().config.KV
+    return !!Config.getInstance().config!.KV
   }
 
-  static initialize(env) {
+  static initialize(env: _APPFLARE_ENV) {
     if (!Config.instance) {
       new Config(env)
     }
