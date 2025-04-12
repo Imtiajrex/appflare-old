@@ -4,7 +4,6 @@ import authRoute from 'routes/auth.route'
 import databaseRoute from 'routes/database.route'
 
 import { cors } from 'hono/cors'
-import Elysia from 'elysia'
 import { getHeaders } from 'lib/header'
 const app = new OpenAPIHono<HonoVariables>()
   .basePath('/api/v1')
