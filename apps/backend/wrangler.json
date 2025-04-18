@@ -7,5 +7,32 @@
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "DURABLE_OBJECT",
+        "class_name": "DBObject"
+      }
+    ]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "APPFLARE_KV"
+    }
+  ],
+  "unsafe": {
+    "bindings": [
+      {
+        "name": "RATE_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "appflare_ratelimiter",
+        "simple": {
+          "limit": 100,
+          "period": 60
+        }
+      }
+    ]
   }
 }

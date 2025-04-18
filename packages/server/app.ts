@@ -18,6 +18,7 @@ const app = new OpenAPIHono<HonoVariables>()
       credentials: true,
     }),
   )
+  .route('/auth', authRoute)
   .use('*', async (c, next) => {
     const session = await auth().api.getSession({
       headers: getHeaders(c.req.raw.headers),
@@ -34,7 +35,6 @@ const app = new OpenAPIHono<HonoVariables>()
 
     return next()
   })
-  .route('/auth', authRoute)
   .route('/databases', databaseRoute)
 
 export default app

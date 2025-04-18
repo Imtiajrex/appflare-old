@@ -1,21 +1,16 @@
 import { betterAuth } from 'better-auth'
-import { mongodbAdapter } from 'better-auth/adapters/mongodb'
-import {
-  admin,
-  apiKey,
-  bearer,
-  jwt,
-  openAPI,
-  organization,
-} from 'better-auth/plugins'
-import DBClient from './db'
+import { admin, apiKey, bearer, jwt, organization } from 'better-auth/plugins'
+import { DBClient } from './db'
+import { openAPI } from './open-api'
+import { mongodbAdapter } from './db-adapter/mongo-adapter'
 
 export const auth = () => {
-  const client = DBClient.getClient()
-  const db = client.db('__appflare__')
+  const client = DBClient.connector
+  // const db = client.db('__appflare__')
+
   return betterAuth({
     basePath: '/api/v1/auth',
-    database: mongodbAdapter(db),
+    database: mongodbAdapter('__appflare__', client),
     emailAndPassword: {
       enabled: true,
     },

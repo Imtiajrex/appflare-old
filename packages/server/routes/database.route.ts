@@ -26,6 +26,7 @@ const databaseRoute = new OpenAPIHono<HonoVariables>()
     '/reference',
     Scalar({
       url: '/api/v1/databases/swagger.json',
+      cdn: 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.28.21/dist/browser/standalone.min.js',
     }),
   )
 export default databaseRoute

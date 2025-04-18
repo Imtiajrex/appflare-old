@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "@appflare/server": "workspace:*",
-    "hono": "^4.7.2"
+    "hono": "^4.7.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250204.0",
-    "wrangler": "^4.10.0"
+    "@cloudflare/workers-types": "^4.20250418.0",
+    "wrangler": "^4.12.0"
   }
 }

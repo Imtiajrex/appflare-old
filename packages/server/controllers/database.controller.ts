@@ -1,5 +1,6 @@
 import { createRoute, type RouteHandler } from '@hono/zod-openapi'
 import { HonoVariables } from 'lib/auth'
+import { DBClient } from 'lib/db'
 import DatabaseSchemas from 'schemas/database.schema'
 export const DatabaseRoutes = {
   listDocuments: createRoute({
@@ -96,8 +97,10 @@ export const DatabaseRoutes = {
 const DatabaseController = {
   listDocuments: (async (c) => {
     const { databaseId, collectionId } = c.req.query()
+    const users = await DBClient.connector.find(databaseId, collectionId, {})
+
     return c.json({
-      documents: [],
+      documents: users,
       message: 'Documents retrieved successfully',
       total: 0,
     })
