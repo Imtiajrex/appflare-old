@@ -3,10 +3,11 @@ import { admin, apiKey, bearer, jwt, organization } from 'better-auth/plugins'
 import { DBClient } from './db'
 import { openAPI } from './open-api'
 import { mongodbAdapter } from './db-adapter/mongo-adapter'
+import Config from './config'
 
 export const auth = () => {
   const client = DBClient.connector
-  // const db = client.db('__appflare__')
+  const { config } = Config.getInstance()
 
   return betterAuth({
     basePath: '/api/v1/auth',
@@ -32,6 +33,25 @@ export const auth = () => {
           type: 'string',
           required: false,
         },
+      },
+    },
+
+    secondaryStorage: {
+      get: async (key) => {
+        const value = await config?.KV?.get(key)
+        return value ? value : null
+      },
+      set: async (key, value, ttl) => {
+        if (ttl)
+          await config?.KV?.put(key, value, {
+            expirationTtl: ttl,
+          })
+        // or for ioredis:
+        // if (ttl) await redis.set(key, value, 'EX', ttl)
+        else await config?.KV?.put(key, value)
+      },
+      delete: async (key) => {
+        await config?.KV?.delete(key)
       },
     },
     plugins: [
