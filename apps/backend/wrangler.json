@@ -12,27 +12,29 @@
     "bindings": [
       {
         "name": "DURABLE_OBJECT",
-        "class_name": "DBObject"
+        "class_name": "MongoDurableObject"
       }
     ]
+  },
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "anglershield"
+    }
+  ],
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["MongoDurableObject"]
+    }
+  ],
+  "placement": {
+    "mode": "smart"
   },
   "kv_namespaces": [
     {
       "binding": "KV",
-      "id": "APPFLARE_KV"
+      "id": "51ab2d7674b5490d9a34de6c14577f7e"
     }
-  ],
-  "unsafe": {
-    "bindings": [
-      {
-        "name": "RATE_LIMITER",
-        "type": "ratelimit",
-        "namespace_id": "appflare_ratelimiter",
-        "simple": {
-          "limit": 100,
-          "period": 60
-        }
-      }
-    ]
-  }
+  ]
 }

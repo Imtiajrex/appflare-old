@@ -6,7 +6,7 @@
     "migrate": "wrangler d1 migrations apply appflare"
   },
   "dependencies": {
-    "@appflare/server": "workspace:*",
+    "appflare": "workspace:*",
     "hono": "^4.7.7"
   },
   "devDependencies": {
