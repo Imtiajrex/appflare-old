@@ -36,7 +36,6 @@ import type {
   MongoRpcPayload,
   MongoRpcResponseData,
 } from './do'
-import db, { client } from './client-local'
 import {
   executeMongoOperation,
   prepareArgsWithSession,
@@ -66,7 +65,7 @@ class CollectionProxy<TSchema extends Document = Document>
 
   constructor(
     collectionName: string,
-    doStub: DurableObjectStub<MongoDurableObject>
+    doStub: DurableObjectStub<MongoDurableObject>,
   ) {
     this.collectionName = collectionName
     this.doStub = doStub
@@ -74,7 +73,7 @@ class CollectionProxy<TSchema extends Document = Document>
 
   private async _executeRemote<TArgs extends unknown[], TDriverResult>(
     op: MongoRpcPayload['op'],
-    args: TArgs
+    args: TArgs,
   ): Promise<TDriverResult> {
     const argumentsAsJson = serializeToJSON(args) as ToJsonFriendly<unknown[]>
     const payload: MongoRpcPayload = {
@@ -84,13 +83,13 @@ class CollectionProxy<TSchema extends Document = Document>
     }
     try {
       const responseDataJson: MongoRpcResponseData = await (this.doStub.execute(
-        payload
+        payload,
       ) as Promise<MongoRpcResponseData>)
       return deserializeFromJSON(responseDataJson) as TDriverResult
     } catch (error: any) {
       console.error(
         `DB Client RPC Error (Op: ${op}, Coll: ${this.collectionName}):`,
-        error.message
+        error.message,
       )
       throw error
     }
@@ -99,7 +98,7 @@ class CollectionProxy<TSchema extends Document = Document>
   // Internal method used by FindCursor
   async _executeFindWithOptions(
     filter: Filter<TSchema>,
-    options?: FindOptions
+    options?: FindOptions,
   ): Promise<WithId<TSchema>[]> {
     return this._executeRemote('find', [filter, options])
   }
@@ -107,14 +106,14 @@ class CollectionProxy<TSchema extends Document = Document>
   // Internal method used by AggregateCursor
   async _executeAggregateWithOptions<TResultDoc extends Document = Document>(
     pipeline: Document[],
-    options?: AggregateOptions
+    options?: AggregateOptions,
   ): Promise<TResultDoc[]> {
     return this._executeRemote('aggregate', [pipeline, options])
   }
 
   async findOne(
     filter: Filter<TSchema>,
-    options?: FindOptions
+    options?: FindOptions,
   ): Promise<WithId<TSchema> | null> {
     return await this._executeRemote('findOne', [filter, options])
   }
@@ -127,14 +126,14 @@ class CollectionProxy<TSchema extends Document = Document>
   async findOneAndUpdate(
     filter: Filter<TSchema>,
     update: UpdateFilter<TSchema>,
-    options?: FindOneAndUpdateOptions // Options can include returnDocument: 'before' | 'after'
+    options?: FindOneAndUpdateOptions, // Options can include returnDocument: 'before' | 'after'
   ): Promise<WithId<TSchema> | null> {
     // Returns the document (before or after update, or null)
     return this._executeRemote('findOneAndUpdate', [filter, update, options])
   }
   async findOneAndDelete(
     filter: Filter<TSchema>,
-    options?: FindOneAndDeleteOptions
+    options?: FindOneAndDeleteOptions,
   ): Promise<WithId<TSchema> | null> {
     // Returns the deleted document or null
     return this._executeRemote('findOneAndDelete', [filter, options])
@@ -142,7 +141,7 @@ class CollectionProxy<TSchema extends Document = Document>
   async findOneAndReplace(
     filter: Filter<TSchema>,
     replacement: Document, // The replacement document (driver ensures no _id on this if upserting)
-    options?: FindOneAndReplaceOptions
+    options?: FindOneAndReplaceOptions,
   ): Promise<WithId<TSchema> | null> {
     // Returns the original or replaced document, or null
     return this._executeRemote('findOneAndReplace', [
@@ -153,13 +152,13 @@ class CollectionProxy<TSchema extends Document = Document>
   }
   async insertOne(
     doc: OptionalUnlessRequiredId<TSchema>,
-    options?: InsertOneOptions
+    options?: InsertOneOptions,
   ): Promise<InsertOneResult<TSchema>> {
     return this._executeRemote('insertOne', [doc, options])
   }
   async insertMany(
     docs: OptionalUnlessRequiredId<TSchema>[],
-    options?: BulkWriteOptions
+    options?: BulkWriteOptions,
   ): Promise<InsertManyResult<TSchema>> {
     // InsertManyOptions is correct
     return this._executeRemote('insertMany', [docs, options])
@@ -167,26 +166,26 @@ class CollectionProxy<TSchema extends Document = Document>
   async updateOne(
     filter: Filter<TSchema>,
     update: UpdateFilter<TSchema> | Partial<TSchema>,
-    options?: UpdateOptions
+    options?: UpdateOptions,
   ): Promise<UpdateResult> {
     return this._executeRemote('updateOne', [filter, update, options])
   }
   async updateMany(
     filter: Filter<TSchema>,
     update: UpdateFilter<TSchema>,
-    options?: UpdateOptions
+    options?: UpdateOptions,
   ): Promise<UpdateResult> {
     return this._executeRemote('updateMany', [filter, update, options])
   }
   async deleteOne(
     filter: Filter<TSchema>,
-    options?: DeleteOptions
+    options?: DeleteOptions,
   ): Promise<DeleteResult> {
     return this._executeRemote('deleteOne', [filter, options])
   }
   async deleteMany(
     filter: Filter<TSchema>,
-    options?: DeleteOptions
+    options?: DeleteOptions,
   ): Promise<DeleteResult> {
     return this._executeRemote('deleteMany', [filter, options])
   }
@@ -194,7 +193,7 @@ class CollectionProxy<TSchema extends Document = Document>
   // Modified aggregate method to return AggregateCursor
   aggregate<TResultDoc extends Document = Document>(
     pipeline: Document[],
-    options?: AggregateOptions
+    options?: AggregateOptions,
   ): AggregateCursor<TResultDoc> {
     return new AggregateCursor<TResultDoc>(pipeline, this as any)
   }
@@ -202,13 +201,13 @@ class CollectionProxy<TSchema extends Document = Document>
   async distinct<TValue = any>( // The type of the distinct values
     key: string, // keyof WithId<TSchema> is more type-safe but string is simpler for proxy
     filter?: Filter<TSchema>,
-    options?: DistinctOptions
+    options?: DistinctOptions,
   ): Promise<TValue[]> {
     return this._executeRemote('distinct', [key, filter, options])
   }
   async countDocuments(
     filter?: Filter<TSchema>,
-    options?: CountDocumentsOptions
+    options?: CountDocumentsOptions,
   ): Promise<number> {
     return this._executeRemote('countDocuments', [filter, options])
   }
@@ -220,8 +219,8 @@ class CollectionProxy<TSchema extends Document = Document>
 
 // sharding logic function
 function getDoStubForShard(
-  appEnv: ConfigEnv,
-  shardKey?: string | number
+  appEnv: _APPFLARE_ENV,
+  shardKey?: string | number,
 ): DurableObjectStub<MongoDurableObject> {
   if (!appEnv.DURABLE_OBJECT) {
     throw new Error('getDoStubForShard: MONGO_DO binding missing from AppEnv.')
@@ -249,7 +248,7 @@ function getDoStubForShard(
   // check here: https://opennext.js.org/cloudflare/troubleshooting#error-cannot-perform-io-on-behalf-of-a-different-request
   const durableObjectId = appEnv.DURABLE_OBJECT.idFromName(doInstanceName) // Use your binding
   const newStub = appEnv.DURABLE_OBJECT.get(
-    durableObjectId
+    durableObjectId,
   ) as DurableObjectStub<MongoDurableObject>
 
   return newStub // Always return a new stub
@@ -265,77 +264,43 @@ function getDoStubForShard(
  */
 export function getCollection<TSchema extends Document = Document>(
   collectionName: string,
-  shardKey?: string | number
+  shardKey?: string | number,
 ) {
-  if (process.env.NODE_ENV === 'development') {
-    // because we can't test DO easily in local dev mode, so workaround to
-    // use mongo client directly.
-    return db.collection(collectionName)
-  } else {
-    const appEnv = Config.getInstance() as ConfigEnv
-    let doStub = getDoStubForShard(appEnv, shardKey)
-    return new CollectionProxy<TSchema>(collectionName, doStub)
-  }
+  const appEnv = Config.getInstance() as _APPFLARE_ENV
+  let doStub = getDoStubForShard(appEnv, shardKey)
+  return new CollectionProxy<TSchema>(collectionName, doStub)
 }
 export function getDatabase(
   databaseName: string,
-  shardKey?: string | number
+  shardKey?: string | number,
 ): any {
-  if (process.env.NODE_ENV === 'development') {
-    // Use the local db client directly in development
-    return db as unknown as Db
-  } else {
-    return {
-      collection: (collectionName: string) =>
-        getCollection(collectionName, shardKey),
-    }
+  return {
+    collection: (collectionName: string) =>
+      getCollection(collectionName, shardKey),
   }
 }
 export async function runTransaction(
   payloads: TransactionPayloadWithNativeArgs[],
-  txOptions?: TransactionOptions
+  txOptions?: TransactionOptions,
 ): Promise<any[]> {
   // Updated payload type
-  if (process.env.NODE_ENV === 'development') {
-    const results: any[] = [] // Array to store results for dev path
-    await client.withSession(async (session: ClientSession) => {
-      await session.withTransaction(async (txSession: ClientSession) => {
-        for (const payload of payloads) {
-          const { col, op, args } = payload // args are now native
-          const collection = db.collection(col)
+  const appEnv = Config.getInstance() as _APPFLARE_ENV
+  const doStub = getDoStubForShard(appEnv)
 
-          // No need to deserialize args, they are already native
-          const finalArgs = prepareArgsWithSession(args, op, txSession)
+  // Serialize arguments before sending to DO
+  const serializedPayloads: MongoRpcPayload[] = payloads.map((p) => ({
+    ...p,
+    args: serializeToJSON(p.args) as ToJsonFriendly<unknown[]>, // Serialize native args
+  }))
 
-          const operationResult = await executeMongoOperation(
-            collection,
-            op,
-            finalArgs
-          )
-          results.push(operationResult) // Collect each result
-        }
-      }, txOptions)
-    })
-    return results // Return the array of results for dev path
-  } else {
-    const appEnv = Config.getInstance() as ConfigEnv
-    const doStub = getDoStubForShard(appEnv)
-
-    // Serialize arguments before sending to DO
-    const serializedPayloads: MongoRpcPayload[] = payloads.map((p) => ({
-      ...p,
-      args: serializeToJSON(p.args) as ToJsonFriendly<unknown[]>, // Serialize native args
-    }))
-
-    const doResults: MongoRpcResponseData[] = await (doStub.runTransaction(
-      serializedPayloads,
-      txOptions
-    ) as Promise<MongoRpcResponseData[]>)
-    // Deserialize results from DO
-    return doResults.map((result: MongoRpcResponseData) =>
-      deserializeFromJSON(result)
-    )
-  }
+  const doResults: MongoRpcResponseData[] = await (doStub.runTransaction(
+    serializedPayloads,
+    txOptions,
+  ) as Promise<MongoRpcResponseData[]>)
+  // Deserialize results from DO
+  return doResults.map((result: MongoRpcResponseData) =>
+    deserializeFromJSON(result),
+  )
 }
 
 export { NativeObjectId as ObjectId, FindCursor, AggregateCursor }
