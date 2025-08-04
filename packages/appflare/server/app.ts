@@ -4,6 +4,7 @@ import { cors } from 'hono/cors'
 import { authRoute } from './routes/auth.route'
 import { auth, HonoVariables } from './lib/auth'
 import { databaseRoute } from './routes/database.route'
+import { adminDatabaseRoute } from './routes/admin.db.route'
 const app = new OpenAPIHono<HonoVariables>()
   .basePath('/v1/api')
   .use(
@@ -33,6 +34,7 @@ const app = new OpenAPIHono<HonoVariables>()
     return next()
   })
   .route('/databases/*', databaseRoute)
+  .route('/admin/databases/*', adminDatabaseRoute)
 
 export default app
 export type ServerType = typeof app
