@@ -17,6 +17,7 @@
   },
   "nohoist": [],
   "dependencies": {
+    "@trpc/client": "^11.4.4",
     "fp-ts": "^2.16.9",
     "neverthrow": "^8.1.1",
     "ts-option": "^2.1.0",

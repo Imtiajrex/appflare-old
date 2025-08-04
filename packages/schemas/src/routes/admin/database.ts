@@ -41,7 +41,7 @@ export const deleteDocumentsSchema = {
   input: z.object({
     databaseId: z.string(),
     collectionId: z.string(),
-    filter: z.any(),
+    filter: z.string(),
   }),
   output: z.object({
     success: z.boolean(),

@@ -36,10 +36,6 @@ import type {
   MongoRpcPayload,
   MongoRpcResponseData,
 } from './do'
-import {
-  executeMongoOperation,
-  prepareArgsWithSession,
-} from './operationExecutor' // Import the shared functions
 import { FindCursor } from './FindCursor'
 import { AggregateCursor } from './AggregateCursor'
 import { ICollectionProxy } from './types'

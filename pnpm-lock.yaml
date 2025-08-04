@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@trpc/client':
+        specifier: ^11.4.4
+        version: 11.4.4(@trpc/server@10.45.2)(typescript@5.3.3)
       fp-ts:
         specifier: ^2.16.9
         version: 2.16.9
@@ -67,6 +70,9 @@ importers:
       '@scalar/hono-api-reference':
         specifier: ^0.8.2
         version: 0.8.2(hono@4.7.7)
+      '@trpc/client':
+        specifier: ^10.45.2
+        version: 10.45.2(@trpc/server@10.45.2)
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
@@ -594,6 +600,12 @@ packages:
     resolution: {integrity: sha512-ykALM5kYWTLn1zYuUOZ2cPWlVfrXhc18HzBDyRhoPYN0jey4iQHEFSEowfnhg1RvYnrAVjNBgHNeSAXjrDbGwg==}
     peerDependencies:
       '@trpc/server': 10.45.2
+
+  '@trpc/client@11.4.4':
+    resolution: {integrity: sha512-86OZl+Y+Xlt9ITGlhCMImERcsWCOrVzpNuzg3XBlsDSmSs9NGsghKjeCpJQlE36XaG3aze+o9pRukiYYvBqxgQ==}
+    peerDependencies:
+      '@trpc/server': 11.4.4
+      typescript: '>=5.7.2'
 
   '@trpc/server@10.45.2':
     resolution: {integrity: sha512-wOrSThNNE4HUnuhJG6PfDRp4L2009KDVxsd+2VYH8ro6o/7/jwYZ8Uu5j+VaW+mOmc8EHerHzGcdbGNQSAUPgg==}
@@ -2166,6 +2178,11 @@ snapshots:
   '@trpc/client@10.45.2(@trpc/server@10.45.2)':
     dependencies:
       '@trpc/server': 10.45.2
+
+  '@trpc/client@11.4.4(@trpc/server@10.45.2)(typescript@5.3.3)':
+    dependencies:
+      '@trpc/server': 10.45.2
+      typescript: 5.3.3
 
   '@trpc/server@10.45.2': {}
 
